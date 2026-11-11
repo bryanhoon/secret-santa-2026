@@ -703,9 +703,14 @@
     }
 
     function saveData() {
-      localStorage.setItem('ss_participants', JSON.stringify(participants));
-      localStorage.setItem('ss_assignments', JSON.stringify(assignments));
-      localStorage.setItem('ss_wishlists', JSON.stringify(wishlists));
+      // Ensure memory state is preserved before writing
+      if (!window.wishlists || typeof window.wishlists !== 'object') {
+        window.wishlists = wishlists || {};
+      }
+      
+      localStorage.setItem('ss_participants', JSON.stringify(window.participants || []));
+      localStorage.setItem('ss_assignments', JSON.stringify(window.assignments || {}));
+      localStorage.setItem('ss_wishlists', JSON.stringify(window.wishlists || {}));
       localStorage.setItem('ss_admin_passcode', adminPasscode);
       localStorage.setItem('ss_force_phase2', forcePhase2TestMode);
 
@@ -856,13 +861,20 @@
     }
 
     function toggleAdminPhaseOverride() {
+      // Preserve current participant wishlists in memory before toggling phase
+      const currentWishlists = JSON.parse(JSON.stringify(window.wishlists || {}));
+      
       forcePhase2TestMode = !forcePhase2TestMode;
+      window.wishlists = currentWishlists;
+      wishlists = window.wishlists;
+
       saveData();
       updateAdminButtonLabel();
       initDeadlineTimer();
       if (currentParticipant) updateUserDashboard();
+      
       showModal('Phase Mode Updated', forcePhase2TestMode 
-        ? 'Deadline skipped! The scratch card reveal phase is now unlocked for everyone while preserving all wishlists.' 
+        ? 'Deadline skipped! The scratch card reveal phase is now unlocked for everyone. All wishlists have been preserved.' 
         : 'Reverted back to original November 30th deadline schedule.', 'info');
     }
 
