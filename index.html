@@ -862,7 +862,7 @@
       initDeadlineTimer();
       if (currentParticipant) updateUserDashboard();
       showModal('Phase Mode Updated', forcePhase2TestMode 
-        ? 'Deadline skipped! The scratch card reveal phase is now unlocked for everyone.' 
+        ? 'Deadline skipped! The scratch card reveal phase is now unlocked for everyone while preserving all wishlists.' 
         : 'Reverted back to original November 30th deadline schedule.', 'info');
     }
 
@@ -1225,7 +1225,14 @@
         assignments = window.assignments;
         window.wishlists = {};
         wishlists = window.wishlists;
-        localStorage.clear();
+        
+        // Remove only revealed status flags without blowing away entire localStorage
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('ss_revealed_')) {
+            localStorage.removeItem(key);
+          }
+        });
+
         saveData();
         renderOrganizerStatus();
         renderUniqueLinksList();
@@ -1240,7 +1247,14 @@
         assignments = window.assignments;
         window.wishlists = {};
         wishlists = window.wishlists;
-        localStorage.clear();
+        
+        // Remove only revealed status flags
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('ss_revealed_')) {
+            localStorage.removeItem(key);
+          }
+        });
+
         saveData();
         renderOrganizerStatus();
         renderUniqueLinksList();
