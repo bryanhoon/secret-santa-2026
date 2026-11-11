@@ -138,7 +138,7 @@
       🎁 Secret Santa Hub ❄️
     </h1>
     <p class="text-dusty-200 text-sm md:text-base mt-2 max-w-md mx-auto opacity-90">
-      Log in as yourself, build your wishlist, and reveal who you are gifting to!
+      Build your wishlist, keep track of deadlines, and reveal who you are gifting to!
     </p>
 
     <!-- Gift Budget Reminder Banner -->
@@ -173,39 +173,31 @@
   <!-- Main Interactive Area -->
   <main class="max-w-xl w-full mx-auto px-4 relative z-20 my-auto">
     
-    <!-- User Selection / Login View -->
-    <div id="view-login" class="bg-dusty-950/85 backdrop-blur-xl border border-dusty-400/20 rounded-2xl p-6 md:p-8 shadow-2xl glow-rose transition-all duration-300 space-y-6">
-      <div>
-        <h2 class="text-2xl font-bold text-roseGold-light mb-1 text-center">Who is logging in?</h2>
-        <p class="text-xs text-dusty-300 text-center mb-4">Select your name to access your Secret Santa portal.</p>
-        
-        <label for="participant-select" class="block text-sm font-medium text-roseGold-light mb-2">
-          <i class="fa-solid fa-user-tag mr-2 text-dusty-400"></i>Select Your Name:
-        </label>
-        <select id="participant-select" class="w-full bg-dusty-900 border border-dusty-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-terracotta-light transition-all text-base">
-          <option value="" disabled selected>-- Choose your profile --</option>
-        </select>
+    <!-- User Selection / Fallback Login View -->
+    <div id="view-login" class="bg-dusty-950/85 backdrop-blur-xl border border-dusty-400/20 rounded-2xl p-6 md:p-8 shadow-2xl glow-rose transition-all duration-300 text-center space-y-4">
+      <div class="w-16 h-16 bg-dusty-900 rounded-full flex items-center justify-center mx-auto text-roseGold text-2xl border border-dusty-700">
+        <i class="fa-solid fa-envelope-open-text"></i>
       </div>
-
-      <button onclick="loginUser()" class="w-full bg-gradient-to-r from-dusty-600 to-terracotta hover:from-dusty-500 hover:to-terracotta-light text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center space-x-2 text-lg border border-dusty-400/30">
-        <i class="fa-solid fa-right-to-bracket"></i>
-        <span>Enter My Secret Santa Portal</span>
-      </button>
+      <div>
+        <h2 class="text-2xl font-bold text-roseGold-light mb-2">Personalized Access Only</h2>
+        <p class="text-sm text-dusty-200 leading-relaxed max-w-sm mx-auto">
+          Please open the unique Secret Santa link sent to your email to access your personal wishlist and reveal your gift target.
+        </p>
+      </div>
+      <div class="pt-2 text-xs text-dusty-400 italic border-t border-dusty-800/60">
+        <i class="fa-solid fa-lock mr-1"></i>Profile switching has been disabled to keep assignments secret!
+      </div>
     </div>
 
     <!-- Logged In User Dashboard View -->
     <div id="view-dashboard" class="hidden space-y-6">
       
-      <!-- User Profile Header & Logout -->
+      <!-- User Profile Header -->
       <div class="bg-dusty-950/85 backdrop-blur-xl border border-dusty-400/20 rounded-2xl p-5 shadow-xl flex justify-between items-center">
         <div>
-          <span class="text-xs text-roseGold uppercase font-semibold tracking-wider">Logged in as</span>
+          <span class="text-xs text-roseGold uppercase font-semibold tracking-wider">Welcome,</span>
           <h2 id="logged-user-name" class="text-2xl font-bold text-white font-festive"></h2>
         </div>
-        <button onclick="logoutUser()" class="bg-dusty-900 hover:bg-dusty-800 text-dusty-300 border border-dusty-700 px-3 py-1.5 rounded-lg text-xs transition flex items-center space-x-1.5">
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span>Switch Profile</span>
-        </button>
       </div>
 
       <!-- Secret Santa Assignment Section -->
@@ -417,17 +409,23 @@
 
         <hr class="border-dusty-800">
 
-        <!-- Reset & Link Share -->
-        <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
-          <button onclick="copyShareLink()" class="w-full sm:w-auto bg-dusty-900 hover:bg-dusty-800 text-dusty-100 border border-dusty-700 px-3.5 py-2 rounded-lg transition text-xs flex items-center justify-center space-x-1.5">
-            <i class="fa-solid fa-share-nodes"></i>
-            <span>Copy App Link</span>
-          </button>
-          
-          <button onclick="confirmResetAll()" class="w-full sm:w-auto bg-dusty-900/80 hover:bg-dusty-800 text-dusty-300 border border-dusty-700 px-3.5 py-2 rounded-lg transition text-xs flex items-center justify-center space-x-1.5">
-            <i class="fa-solid fa-rotate-left"></i>
-            <span>Reset All Assignments</span>
-          </button>
+        <!-- Personal Links Generator & Reset -->
+        <div class="space-y-3">
+          <h3 class="font-bold text-roseGold-light">Mailing List Unique Links</h3>
+          <p class="text-dusty-300 text-xs">Copy unique links for each person to send in your emails:</p>
+          <div id="unique-links-list" class="max-h-36 overflow-y-auto space-y-1.5 bg-dusty-900/90 p-2.5 rounded-lg border border-dusty-800 text-xs font-mono">
+            <!-- Rendered dynamically -->
+          </div>
+          <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-1">
+            <button onclick="copyAllPersonalLinks()" class="w-full sm:w-auto bg-dusty-800 hover:bg-dusty-700 text-roseGold-light border border-dusty-700 px-3.5 py-2 rounded-lg transition text-xs flex items-center justify-center space-x-1.5">
+              <i class="fa-solid fa-copy"></i>
+              <span>Copy All Links For Emailing</span>
+            </button>
+            <button onclick="confirmResetAll()" class="w-full sm:w-auto bg-dusty-900/80 hover:bg-dusty-800 text-dusty-300 border border-dusty-700 px-3.5 py-2 rounded-lg transition text-xs flex items-center justify-center space-x-1.5">
+              <i class="fa-solid fa-rotate-left"></i>
+              <span>Reset All Assignments</span>
+            </button>
+          </div>
         </div>
 
       </div>
@@ -522,16 +520,16 @@
           console.error("Firestore sync error:", error);
         });
 
-        // Cloud sync helper function
+        // Cloud sync helper function with fallback checks against undefined values
         window.syncToCloud = async function() {
           if (!window.isCloudMode || !window.db) return;
           try {
             const docRef = doc(window.db, 'artifacts', window.appId, 'public', 'data', 'secretsanta', 'main');
             await setDoc(docRef, {
-              participants: window.participants,
-              assignments: window.assignments,
-              wishlists: window.wishlists,
-              forcePhase2TestMode: window.forcePhase2TestMode,
+              participants: Array.isArray(window.participants) ? window.participants : [],
+              assignments: (window.assignments && typeof window.assignments === 'object') ? window.assignments : {},
+              wishlists: (window.wishlists && typeof window.wishlists === 'object') ? window.wishlists : {},
+              forcePhase2TestMode: !!window.forcePhase2TestMode,
               updatedAt: new Date().toISOString()
             }, { merge: true });
           } catch (e) {
@@ -566,9 +564,10 @@
     // --- State Variables ---
     const DEFAULT_PARTICIPANTS = ["Alice", "Bob", "Charlie", "Diana", "Evan", "Fiona"];
     
-    let participants = [];
-    let assignments = {}; // Map: { "ParticipantName": "GifteeName" }
-    let wishlists = {};   // Map: { "ParticipantName": ["Item 1", "Item 2"] }
+    // Attach directly to window so module scripts & global scripts share state
+    window.participants = [];
+    window.assignments = {}; // Map: { "ParticipantName": "GifteeName" }
+    window.wishlists = {};   // Map: { "ParticipantName": ["Item 1", "Item 2"] }
     let currentParticipant = null;
     let scratchCanvas = null;
     let scratchCtx = null;
@@ -577,36 +576,130 @@
     // Admin Passcode state & phase override
     let adminPasscode = 'santa2026';
     let isOrganizerUnlocked = false;
-    let forcePhase2TestMode = false;
+    window.forcePhase2TestMode = false;
     let isCloudMode = false;
+
+    // Short-hand reference aliases
+    let participants = window.participants;
+    let assignments = window.assignments;
+    let wishlists = window.wishlists;
+
+    // --- Data Storage Loader ---
+    function loadStoredData() {
+      try {
+        const storedParticipants = localStorage.getItem('ss_participants');
+        window.participants = storedParticipants ? JSON.parse(storedParticipants) : [...DEFAULT_PARTICIPANTS];
+
+        const storedAssignments = localStorage.getItem('ss_assignments');
+        window.assignments = storedAssignments ? JSON.parse(storedAssignments) : {};
+
+        const storedWishlists = localStorage.getItem('ss_wishlists');
+        window.wishlists = storedWishlists ? JSON.parse(storedWishlists) : {};
+
+        participants = window.participants;
+        assignments = window.assignments;
+        wishlists = window.wishlists;
+
+        const storedAdminPass = localStorage.getItem('ss_admin_passcode');
+        if (storedAdminPass) adminPasscode = storedAdminPass;
+
+        const storedForcePhase = localStorage.getItem('ss_force_phase2');
+        if (storedForcePhase !== null) window.forcePhase2TestMode = (storedForcePhase === 'true');
+
+        const inputEl = document.getElementById('participant-list-input');
+        if (inputEl) {
+          inputEl.value = window.participants.join('\n');
+        }
+      } catch (err) {
+        console.warn('Error loading localStorage data:', err);
+        window.participants = [...DEFAULT_PARTICIPANTS];
+        participants = window.participants;
+      }
+    }
 
     // --- Initialization on Load ---
     window.onload = function() {
       createSnowflakes();
       loadStoredData();
-      renderParticipantDropdown();
       renderOrganizerStatus();
       initDeadlineTimer();
       updateAdminButtonLabel();
+      renderUniqueLinksList();
+      checkURLPersonalLink();
     };
 
-    function loadStoredData() {
-      const storedParticipants = localStorage.getItem('ss_participants');
-      participants = storedParticipants ? JSON.parse(storedParticipants) : [...DEFAULT_PARTICIPANTS];
+    // Check if URL has ?person=Name query parameter from personal mailing list link
+    function checkURLPersonalLink() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const personParam = urlParams.get('person');
+      
+      if (personParam) {
+        // Find matching participant (case insensitive)
+        const match = participants.find(p => p.toLowerCase() === personParam.trim().toLowerCase());
+        if (match) {
+          currentParticipant = match;
+          document.getElementById('logged-user-name').textContent = currentParticipant;
+          document.getElementById('view-login').classList.add('hidden');
+          document.getElementById('view-dashboard').classList.remove('hidden');
 
-      const storedAssignments = localStorage.getItem('ss_assignments');
-      assignments = storedAssignments ? JSON.parse(storedAssignments) : {};
+          if (Object.keys(assignments).length === 0) {
+            const generated = generateFullAssignments(participants);
+            if (generated) {
+              assignments = generated;
+              saveData();
+            }
+          }
 
-      const storedWishlists = localStorage.getItem('ss_wishlists');
-      wishlists = storedWishlists ? JSON.parse(storedWishlists) : {};
+          updateUserDashboard();
+          renderMyWishlist();
+          checkDeadlineLockState();
+        }
+      }
+    }
 
-      const storedPass = localStorage.getItem('ss_admin_passcode');
-      if (storedPass) adminPasscode = storedPass;
+    function renderUniqueLinksList() {
+      const container = document.getElementById('unique-links-list');
+      if (!container) return;
+      container.innerHTML = '';
 
-      const storedOverride = localStorage.getItem('ss_force_phase2');
-      if (storedOverride) forcePhase2TestMode = storedOverride === 'true';
+      const baseUrl = window.location.origin + window.location.pathname;
 
-      document.getElementById('participant-list-input').value = participants.join('\n');
+      participants.forEach(name => {
+        const link = `${baseUrl}?person=${encodeURIComponent(name)}`;
+        const row = document.createElement('div');
+        row.className = 'flex justify-between items-center text-[11px] text-dusty-200 border-b border-dusty-800/50 pb-1 last:border-0';
+        row.innerHTML = `
+          <span class="font-bold text-roseGold shrink-0 w-20 truncate">${escapeHTML(name)}:</span>
+          <span class="truncate mx-2 text-dusty-400 text-[10px] select-all">${escapeHTML(link)}</span>
+          <button onclick="copySingleLink('${escapeHTML(name)}', '${escapeHTML(link)}')" class="text-xs text-roseGold hover:text-white px-1.5 py-0.5 bg-dusty-800 rounded shrink-0">
+            Copy
+          </button>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function copySingleLink(name, link) {
+      const dummy = document.createElement('input');
+      document.body.appendChild(dummy);
+      dummy.value = link;
+      dummy.select();
+      document.execCommand('copy');
+      document.body.removeChild(dummy);
+      showModal('Link Copied!', `Unique link for ${name} copied to clipboard.`, 'info');
+    }
+
+    function copyAllPersonalLinks() {
+      const baseUrl = window.location.origin + window.location.pathname;
+      const linksText = participants.map(name => `${name}: ${baseUrl}?person=${encodeURIComponent(name)}`).join('\n');
+      
+      const dummy = document.createElement('textarea');
+      document.body.appendChild(dummy);
+      dummy.value = linksText;
+      dummy.select();
+      document.execCommand('copy');
+      document.body.removeChild(dummy);
+      showModal('All Links Copied!', 'All participant links copied to clipboard. You can now paste them directly into your mailing list software!', 'info');
     }
 
     function saveData() {
@@ -1080,20 +1173,14 @@
 
     // --- UI Renderers & Helpers ---
     function renderParticipantDropdown() {
-      const select = document.getElementById('participant-select');
-      select.innerHTML = '<option value="" disabled selected>-- Choose your profile --</option>';
-      participants.forEach(name => {
-        const opt = document.createElement('option');
-        opt.value = name;
-        opt.textContent = name;
-        select.appendChild(opt);
-      });
+      // Profile dropdown removed to enforce link-only security
     }
 
     function renderOrganizerStatus() {
       const statusList = document.getElementById('status-list');
       const countBadge = document.getElementById('draw-count-badge');
       const progressBar = document.getElementById('draw-progress-bar');
+      if (!statusList) return;
       statusList.innerHTML = '';
       let completedCount = 0;
 
@@ -1117,6 +1204,9 @@
       countBadge.textContent = `${completedCount} / ${participants.length} Revealed`;
       const pct = participants.length > 0 ? (completedCount / participants.length) * 100 : 0;
       progressBar.style.width = `${pct}%`;
+
+      // Keep unique links list synced with configured participants
+      renderUniqueLinksList();
     }
 
     function saveParticipants() {
@@ -1129,25 +1219,31 @@
       }
 
       showModal('Reset Assignments?', 'Updating participant list will clear current draw assignments and wishlists. Proceed?', 'confirm', () => {
-        participants = parsed;
-        assignments = {};
-        wishlists = {};
+        window.participants = parsed;
+        participants = window.participants;
+        window.assignments = {};
+        assignments = window.assignments;
+        window.wishlists = {};
+        wishlists = window.wishlists;
         localStorage.clear();
         saveData();
-        renderParticipantDropdown();
         renderOrganizerStatus();
+        renderUniqueLinksList();
         if (currentParticipant) logoutUser();
-        showModal('Success', 'Participant list updated!', 'info');
+        showModal('Success', 'Participant list updated and unique links regenerated!', 'info');
       });
     }
 
     function confirmResetAll() {
       showModal('Reset All?', 'Are you sure you want to clear all draw assignments and wishlist data?', 'confirm', () => {
-        assignments = {};
-        wishlists = {};
+        window.assignments = {};
+        assignments = window.assignments;
+        window.wishlists = {};
+        wishlists = window.wishlists;
         localStorage.clear();
         saveData();
         renderOrganizerStatus();
+        renderUniqueLinksList();
         if (currentParticipant) logoutUser();
         showModal('Reset Completed', 'All assignments cleared.', 'info');
       });
