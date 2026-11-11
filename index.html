@@ -139,7 +139,7 @@
         <div>
           <h1 class="text-xl font-bold font-serif text-white tracking-wide">Secret Santa Exchange</h1>
           <p class="text-xs text-dusty-300 flex items-center">
-            <span>Spend Limit: <strong class="text-roseGold-light">$60 Max</strong></span>
+            <span>Spend Limit: <strong class="text-roseGold-light">$50 Max</strong></span>
             <span class="mx-2">•</span>
             <span id="cloud-status" class="text-dusty-400"><i class="fa-solid fa-hard-drive mr-1"></i>Local Mode</span>
           </p>
@@ -211,9 +211,9 @@
       <div class="bg-terracotta-dark/20 border border-terracotta/30 rounded-xl p-3 flex items-center justify-between text-xs text-roseGold-light">
         <div class="flex items-center">
           <i class="fa-solid fa-piggy-bank text-terracotta-light mr-2.5 text-base"></i>
-          <span>Gift Spending Limit: Please keep gifts <strong>under $60</strong>!</span>
+          <span>Gift Spending Limit: Please keep gifts <strong>under $50</strong>!</span>
         </div>
-        <span class="text-[10px] bg-terracotta-dark/40 px-2 py-0.5 rounded text-dusty-200 border border-terracotta/40">Max $60</span>
+        <span class="text-[10px] bg-terracotta-dark/40 px-2 py-0.5 rounded text-dusty-200 border border-terracotta/40">Max $50</span>
       </div>
 
       <!-- Grid Layout: Wishlist & Draw Reveal -->
@@ -229,12 +229,12 @@
               Open for Edits
             </span>
           </div>
-          <p class="text-xs text-dusty-300">Add gift ideas (under $60) so your Secret Santa knows what you'd love!</p>
+          <p class="text-xs text-dusty-300">Add gift ideas (under $50) so your Secret Santa knows what you'd love!</p>
 
           <!-- Add Item Form -->
-          <div id="wishlist-input-container" class="flex gap-2">
-            <input type="text" id="wishlist-input" onkeydown="if(event.key === 'Enter') addWishlistItem()" placeholder="e.g. Popcorn bundle, Steam gift card, Jollibee card..." class="w-full bg-dusty-900 border border-dusty-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-terracotta-light">
-            <button id="add-wishlist-btn" onclick="addWishlistItem()" class="bg-terracotta hover:bg-terracotta-dark text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center shrink-0">
+          <div id="wishlist-input-container" class="flex gap-2 relative z-20">
+            <input type="text" id="wishlist-input" placeholder="e.g. Popcorn bundle, Steam card, Jollibee..." class="w-full bg-dusty-900 border border-dusty-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-terracotta-light">
+            <button type="button" id="add-wishlist-btn" class="bg-terracotta hover:bg-terracotta-dark text-white px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center shrink-0 cursor-pointer">
               <i class="fa-solid fa-plus mr-1"></i>Add
             </button>
           </div>
@@ -625,7 +625,7 @@
         li.innerHTML = `
           <span class="flex items-center"><i class="fa-solid fa-gift text-terracotta mr-2"></i>${escapeHTML(item)}</span>
           ${(!unlocked || adminOverridePhase2) ? `
-            <button onclick="removeWishlistItem(${index})" class="text-dusty-400 hover:text-red-400 transition p-1">
+            <button type="button" onclick="removeWishlistItem(${index})" class="text-dusty-400 hover:text-red-400 transition p-1 cursor-pointer">
               <i class="fa-solid fa-trash-can"></i>
             </button>
           ` : ''}
@@ -685,94 +685,41 @@
       renderMyWishlist();
     }
 
-    function renderGifteeWishlist(giftee) {
-      const box = document.getElementById('giftee-wishlist-box');
-      const ul = document.getElementById('giftee-wishlist-items');
-      const title = document.getElementById('giftee-wishlist-title');
+    // Bind event listeners securely on load to guarantee input and button responsiveness
+    function initWishlistListeners() {
+      const addBtn = document.getElementById('add-wishlist-btn');
+      const inputField = document.getElementById('wishlist-input');
 
-      box.classList.remove('hidden');
-      title.innerHTML = `<i class="fa-solid fa-gift mr-1.5 text-terracotta"></i>${escapeHTML(giftee)}'s Wishlist:`;
-
-      ul.innerHTML = '';
-      const list = (window.wishlists && window.wishlists[giftee]) ? window.wishlists[giftee] : [];
-
-      if (list.length === 0) {
-        ul.innerHTML = `<li class="text-xs text-dusty-400 italic py-1">${escapeHTML(giftee)} has not listed any specific items yet. Surprise them!</li>`;
-        return;
-      }
-
-      list.forEach(item => {
-        const li = document.createElement('li');
-        li.className = "bg-dusty-900 border border-dusty-800 rounded-lg px-2.5 py-1.5 text-dusty-200 flex items-center";
-        li.innerHTML = `<i class="fa-solid fa-sparkles text-terracotta-light mr-2 text-[10px]"></i>${escapeHTML(item)}`;
-        ul.appendChild(li);
-      });
-    }
-
-    function refreshGifteeWishlist() {
-      const target = window.assignments[window.currentParticipant];
-      if (target) {
-        renderGifteeWishlist(target);
-      }
-    }
-
-    // --- SCRATCH CARD REVEAL CANVAS LOGIC ---
-    function setupScratchCard() {
-      const target = window.assignments[window.currentParticipant];
-      if (!target) return;
-
-      document.getElementById('target-person-name').innerText = target;
-
-      const canvas = document.getElementById('scratch-canvas');
-      const wrapper = document.getElementById('scratch-wrapper');
-      const ctx = canvas.getContext('2d');
-
-      const width = wrapper.clientWidth;
-      const height = wrapper.clientHeight;
-
-      canvas.width = width;
-      canvas.height = height;
-
-      // Check if already revealed in localStorage
-      const revealedKey = `ss_revealed_${window.currentParticipant}`;
-      if (localStorage.getItem(revealedKey) === "true") {
-        canvas.style.display = 'none';
-        renderGifteeWishlist(target);
-        return;
-      } else {
-        canvas.style.display = 'block';
-      }
-
-      // Draw metallic festive cover on canvas
-      ctx.fillStyle = '#7E3636';
-      ctx.fillRect(0, 0, width, height);
-
-      // Add silver/rose foil pattern
-      ctx.fillStyle = '#B85B5B';
-      for (let i = 0; i < width; i += 20) {
-        ctx.fillRect(i, 0, 10, height);
-      }
-
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-      ctx.fillRect(0, 0, width, height);
-
-      // Text on scratch surface
-      ctx.font = 'bold 15px Inter, sans-serif';
-      ctx.fillStyle = '#F6EAEA';
-      ctx.textAlign = 'center';
-      ctx.fillText('✨ Scratch to Reveal Your Match! ✨', width / 2, height / 2 + 5);
-
-      let isDrawing = false;
-      let scratchedPixels = 0;
-
-      function getBrushPos(e) {
-        const rect = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return {
-          x: clientX - rect.left,
-          y: clientY - rect.top
+      if (addBtn) {
+        addBtn.onclick = function(e) {
+          e.preventDefault();
+          addWishlistItem();
         };
+      }
+
+      if (inputField) {
+        inputField.onkeydown = function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            addWishlistItem();
+          }
+        };
+      }
+    }
+
+    // --- INITIALIZATION ---
+    window.onload = function() {
+      loadStoredData();
+      initSnowAnimation();
+      initUserFromURL();
+      startDeadlineCountdown();
+      initWishlistListeners();
+
+      // Ensure draw pairings exist
+      if (Object.keys(window.assignments).length === 0 && window.participants.length > 0) {
+        generateAssignments();
+      }
+    };
       }
 
       function scratch(e) {
