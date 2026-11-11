@@ -871,30 +871,54 @@
       saveData();
       updateAdminButtonLabel();
       initDeadlineTimer();
-      if (currentParticipant) updateUserDashboard();
+      if (currentParticipant) {
+        updateUserDashboard();
+        renderMyWishlist();
+      }
       
       showModal('Phase Mode Updated', forcePhase2TestMode 
         ? 'Deadline skipped! The scratch card reveal phase is now unlocked for everyone. All wishlists have been preserved.' 
         : 'Reverted back to original November 30th deadline schedule.', 'info');
     }
+    function updateUserDashboard() {
+      if (!currentParticipant) return;
 
-    // --- Wishlist Management ---
-    function addWishlistItem() {
-      if (isDeadlinePassed()) {
-        showModal('Deadline Passed', 'Wishlists are locked after November 30th.', 'info');
-        return;
+      const phase2Unlocked = isDrawPhaseUnlocked();
+      const isRevealed = localStorage.getItem(`ss_revealed_${currentParticipant}`) === 'true';
+
+      const statusBadge = document.getElementById('draw-status-badge');
+      const phase1LockedEl = document.getElementById('assignment-phase1-locked');
+      const unrevealedStateEl = document.getElementById('assignment-unrevealed-state');
+      const scratchModalArea = document.getElementById('scratch-modal-area');
+      const revealedStateEl = document.getElementById('assignment-revealed-state');
+
+      phase1LockedEl.classList.add('hidden');
+      unrevealedStateEl.classList.add('hidden');
+      scratchModalArea.classList.add('hidden');
+      revealedStateEl.classList.add('hidden');
+
+      if (!phase2Unlocked) {
+        statusBadge.textContent = "Phase 1: Wishlist Editing";
+        statusBadge.className = "text-xs bg-dusty-900 text-roseGold px-2.5 py-1 rounded-full border border-dusty-700";
+        phase1LockedEl.classList.remove('hidden');
+      } else {
+        if (isRevealed) {
+          statusBadge.textContent = "Revealed";
+          statusBadge.className = "text-xs bg-terracotta/30 text-roseGold-light px-2.5 py-1 rounded-full border border-terracotta/40";
+          revealedStateEl.classList.remove('hidden');
+          
+          const giftee = assignments[currentParticipant];
+          document.getElementById('revealed-giftee-name').textContent = giftee || 'Pending Draw';
+          document.getElementById('giftee-wishlist-owner').textContent = giftee || 'Giftee';
+          if (giftee) renderGifteeWishlist(giftee);
+        } else {
+          statusBadge.textContent = "Ready to Reveal";
+          statusBadge.className = "text-xs bg-dusty-900 text-white px-2.5 py-1 rounded-full border border-dusty-600 animate-pulse";
+          unrevealedStateEl.classList.remove('hidden');
+        }
       }
 
-      const input = document.getElementById('wishlist-input');
-      const text = input.value.trim();
-      if (!text) return;
-
-      if (!wishlists[currentParticipant]) {
-        wishlists[currentParticipant] = [];
-      }
-      wishlists[currentParticipant].push(text);
-      input.value = '';
-      saveData();
+      checkDeadlineLockState();
       renderMyWishlist();
     }
 
