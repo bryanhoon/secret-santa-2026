@@ -21,8 +21,19 @@
     // NOTE FOR GITHUB PAGES HOSTING:
     // If hosting outside this preview environment, paste your own free Firebase web app config object below
     // so all participants share the same live online database across devices:
-    const STANDALONE_FIREBASE_CONFIG = null;
+    const STANDALONE_FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBOv19biIesZSOMk8X8dReHp426Y7n2SBo",
+  authDomain: "secret-santa-2026-d95ca.firebaseapp.com",
+  projectId: "secret-santa-2026-d95ca",
+  storageBucket: "secret-santa-2026-d95ca.firebasestorage.app",
+  messagingSenderId: "1090442714653",
+  appId: "1:1090442714653:web:85388ae608f76ad09f30f4",
+  measurementId: "G-1G6SGLRZRX"
+};
 
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
     async function initCloudSync() {
       try {
         let firebaseConfig = STANDALONE_FIREBASE_CONFIG;
