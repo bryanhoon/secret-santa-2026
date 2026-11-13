@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎁 Secret Santa Exchange 2026</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome & Canvas Confetti -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Google Fonts: Mountains of Christmas, Inter & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Mountains+of+Christmas:wght@400;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dusty: {
+              50: '#FFF5F5',
+              100: '#FFE3E3',
+              200: '#FFC9C9',
+              300: '#FFA8A8',
+              400: '#FF6B6B',
+              500: '#F03E3E', // Bright vibrant festive red
+              600: '#E03131',
+              700: '#C92A2A',
+              800: '#A61E1E',
+              900: '#7D1414',
+              950: '#520B0B'
+            },
+            terracotta: {
+              light: '#FF8787',
+              DEFAULT: '#FA5252',
+              dark: '#C92A2A'
+            },
+            roseGold: {
+              light: '#FFF0F0',
+              DEFAULT: '#FFD8D8',
+              dark: '#FF9999'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+            festive: ['"Mountains of Christmas"', 'cursive']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #6B1111;
+      background-image: radial-gradient(circle at 50% 0%, #B81D1D 0%, #6B1111 75%);
+      color: #FFF5F5;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      overflow-x: hidden;
+    }
+
+    /* Candy Cane Striped Progress Bar Animation */
+    .candy-cane-bar {
+      background: repeating-linear-gradient(
+        -45deg,
+        #FA5252,
+        #FA5252 14px,
+        #FFFFFF 14px,
+        #FFFFFF 28px
+      );
+      background-size: 40px 40px;
+      animation: candyCaneMove 1s linear infinite;
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6), 0 0 18px rgba(255, 107, 107, 0.8);
+    }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+            festive: ['"Mountains of Christmas"', 'cursive']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #381515;
+      background-image: radial-gradient(circle at 50% 0%, #5E2424 0%, #381515 75%);
+      color: #FDF8F8;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      overflow-x: hidden;
+    }
+
+    /* Candy Cane Striped Progress Bar Animation */
+    .candy-cane-bar {
+      background: repeating-linear-gradient(
+        -45deg,
+        #D95353,
+        #D95353 14px,
+        #FFFFFF 14px,
+        #FFFFFF 28px
+      );
+      background-size: 40px 40px;
+      animation: candyCaneMove 1s linear infinite;
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5), 0 0 15px rgba(240, 168, 146, 0.6);
+    }
+
+    @keyframes candyCaneMove {
+      0% { background-position: 0 0; }
+      100% { background-position: 40px 0; }
+    }
+
+    /* Floating & Bouncing Holiday Animations */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-7px) rotate(5deg); }
+    }
+    .animate-float {
+      animation: floatSlow 3.5s ease-in-out infinite;
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-4deg); }
+      50% { transform: rotate(4deg); }
+    }
+    .animate-wiggle {
+      animation: wiggle 2.5s ease-in-out infinite;
+    }
+
+    /* Snow Animation Canvas */
+    #snow-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Scratch Card Container */
+    .scratch-container {
+      position: relative;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .scratch-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      touch-action: none;
+      border-radius: 1rem;
+      z-index: 10;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #520B0B;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #C92A2A;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-dusty-500 selection:text-white">
+
+  <!-- Background Snow Canvas -->
+  <canvas id="snow-canvas"></canvas>
+
+  <!-- Navigation Header -->
+  <header class="relative z-10 w-full max-w-4xl mx-auto px-4 pt-6 pb-2">
+    <div class="flex flex-col sm:flex-row items-center justify-between bg-dusty-900/85 backdrop-blur-md border border-dusty-700/60 rounded-3xl p-5 shadow-2xl gap-4">
+      <div class="flex items-center space-x-4">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-dusty-500 to-terracotta flex items-center justify-center text-white text-3xl shadow-lg animate-float">
+          <i class="fa-solid fa-sleigh"></i>
+        </div>
+        <div>
+          <h1 class="text-3xl sm:text-4xl font-bold font-festive text-white tracking-wider drop-shadow">Secret Santa Exchange 2026</h1>
+          <p class="text-sm text-dusty-200 flex items-center mt-0.5">
+            <span>Spend Limit: <strong class="text-roseGold-light">&lt;$50 USD</strong></span>
+            <span class="mx-2">•</span>
+            <span id="cloud-status" class="text-dusty-200"><i class="fa-solid fa-snowflake mr-1 text-terracotta-light"></i>North Pole Hub</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Current User Badge (If Logged In) -->
+      <div id="user-header-badge" class="hidden items-center gap-3 bg-dusty-950/60 px-4 py-2 rounded-2xl border border-dusty-700/60">
+        <div class="text-right">
+          <div class="text-xs uppercase tracking-wider text-dusty-300 font-semibold">Elf Logged In</div>
+          <div id="logged-in-name" class="text-base font-bold text-roseGold-light">Participant</div>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-dusty-800 border border-dusty-600 flex items-center justify-center text-roseGold text-base">
+          <i class="fa-solid fa-hat-santa"></i>🎅
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="relative z-10 flex-grow w-full max-w-4xl mx-auto px-4 py-6">
+
+    <!-- No Link Provided View (Logged Out State) -->
+    <div id="logged-out-view" class="bg-dusty-900/90 backdrop-blur-xl border border-dusty-700/70 rounded-3xl p-8 text-center shadow-2xl max-w-md mx-auto space-y-5">
+      <div class="w-20 h-20 mx-auto rounded-full bg-dusty-800 border border-dusty-600 flex items-center justify-center text-terracotta-light text-4xl shadow-inner animate-wiggle">
+        <i class="fa-solid fa-envelope-open-text"></i>
+      </div>
+      <div>
+        <h2 class="text-3xl font-festive font-bold text-white mb-2 tracking-wide">Check Your Email Link! ✉️</h2>
+        <p class="text-sm text-dusty-200 leading-relaxed">
+          Please click the unique magic link sent directly to your email address to access your Secret Santa portal and wishlist!
+        </p>
+      </div>
+      <div class="p-4 bg-dusty-950/70 border border-dusty-800 rounded-2xl text-left text-sm text-dusty-200 space-y-1.5">
+        <div class="font-semibold text-roseGold flex items-center">
+          <i class="fa-solid fa-lock mr-2 text-terracotta"></i>Top Secret North Pole Access
+        </div>
+        <p class="text-xs text-dusty-300">Direct profile switching is locked so Secret Santa pairings remain a complete surprise!</p>
+      </div>
+    </div>
+
+    <!-- Active User Portal (Shown when ?person=Name parameter is present) -->
+    <div id="user-portal-view" class="hidden space-y-6">
+
+      <!-- Festive Personal Welcome Banner -->
+      <div class="relative overflow-hidden bg-gradient-to-r from-dusty-800 via-dusty-900 to-dusty-800 border border-dusty-600/80 rounded-3xl p-6 sm:p-7 shadow-2xl">
+        <!-- Decorative Holiday Graphics -->
+        <div class="absolute -right-3 -top-3 text-8xl text-dusty-700/40 pointer-events-none select-none rotate-12">
+          <i class="fa-solid fa-holly-berry"></i>
+        </div>
+        <div class="absolute right-16 bottom-1 text-5xl text-terracotta/25 pointer-events-none select-none animate-float">
+          <i class="fa-solid fa-candy-cane"></i>
+        </div>
+
+        <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-terracotta-light bg-dusty-950/80 px-3.5 py-1.5 rounded-full border border-dusty-700 mb-2.5">
+              <i class="fa-solid fa-sparkles"></i> Official Sleigh Pass
+            </div>
+            <h2 class="text-4xl sm:text-5xl font-festive font-bold text-white tracking-wide drop-shadow">
+              Merry Christmas, <span id="welcome-person-name" class="text-roseGold-light underline decoration-terracotta decoration-wavy underline-offset-4">Friend</span>! 🎄
+            </h2>
+            <p class="text-sm text-dusty-200 mt-2">Jot down your holiday wishes below before the candy cane timer runs out!</p>
+          </div>
+          <div class="flex items-center gap-3 text-4xl bg-dusty-950/60 px-5 py-3.5 rounded-2xl border border-dusty-700/80 self-start sm:self-center shadow-inner animate-wiggle">
+            <span>🎅</span>
+            <span>🎁</span>
+            <span>🦌</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Candy Cane Wishlist Deadline Bar -->
+      <div class="bg-dusty-900/90 backdrop-blur-xl border border-dusty-700/70 rounded-3xl p-6 shadow-xl space-y-3.5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div class="flex items-center font-bold text-roseGold-light text-base">
+            <i class="fa-solid fa-candy-cane mr-2.5 text-terracotta-light text-xl animate-bounce"></i>
+            <span class="font-festive text-2xl tracking-wide text-white mr-2">Wishlist Deadline:</span> November 30, 2026
+          </div>
+          <div id="countdown-text" class="text-roseGold-light font-mono text-sm bg-dusty-950 px-3.5 py-1.5 rounded-xl border border-dusty-700 shadow-inner">
+            Calculating time remaining...
+          </div>
+        </div>
+        
+        <!-- Animated Loading Candy Cane Bar Graphic -->
+        <div class="relative w-full bg-dusty-950 h-6 rounded-full overflow-hidden border-2 border-dusty-700 p-0.5 shadow-inner">
+          <div id="candy-progress-fill" class="candy-cane-bar h-full rounded-full transition-all duration-700 flex items-center justify-end pr-2.5" style="width: 65%;">
+            <span class="w-3 h-3 rounded-full bg-white shadow-md animate-ping"></span>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center text-xs text-dusty-300 pt-0.5">
+          <span class="flex items-center"><i class="fa-solid fa-pen-to-square text-terracotta-light mr-1.5"></i> Phase 1: Add Wishlist Items</span>
+          <span class="flex items-center"><i class="fa-solid fa-wand-magic-sparkles text-roseGold mr-1.5"></i> Phase 2: Secret Draw Unlocks Dec 1</span>
+        </div>
+      </div>
+
+      <!-- Price Limit Reminder Notice -->
+      <div class="bg-terracotta/25 border border-terracotta/50 rounded-2xl p-4 flex items-center justify-between text-sm text-roseGold-light shadow-md">
+        <div class="flex items-center">
+          <i class="fa-solid fa-piggy-bank text-terracotta-light mr-3 text-xl"></i>
+          <span>Elf Budget Rule: Please keep all gift ideas <strong>under $50 USD</strong>!</span>
+        </div>
+        <span class="text-xs font-bold bg-terracotta-dark/60 px-3 py-1 rounded-full text-white border border-terracotta/50">Max &lt;$50</span>
+      </div>
+
+      <!-- Grid Layout: Wishlist & Draw Reveal -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- My Personal Wishlist Section -->
+        <div class="bg-dusty-900/90 backdrop-blur-xl border border-dusty-700/70 rounded-3xl p-6 shadow-2xl space-y-4">
+          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+            <h3 class="text-3xl font-festive font-bold text-roseGold-light flex items-center tracking-wide">
+              <i class="fa-solid fa-heart mr-2.5 text-terracotta-light text-xl"></i>My Personal Wishlist
+            </h3>
+            <span id="deadline-status-badge" class="text-xs px-3 py-1 rounded-full border bg-dusty-950 text-roseGold border-dusty-700 w-fit font-medium">
+              Open for Edits
+            </span>
+          </div>
+          <p class="text-sm text-dusty-200">Add gift ideas (under $50 USD) so your Secret Santa knows what you'd love!</p>
+
+          <!-- Add Item Form -->
+          <form id="wishlist-form" onsubmit="event.preventDefault(); addWishlistItem();" class="flex gap-2 relative z-30">
+            <input type="text" id="wishlist-input" autocomplete="off" placeholder="Type gift idea & press Add..." class="w-full bg-dusty-950 border border-dusty-600 rounded-xl px-4 py-3 text-sm text-white placeholder-dusty-400 focus:outline-none focus:ring-2 focus:ring-terracotta-light">
+            <button type="submit" id="add-wishlist-btn" class="bg-terracotta hover:bg-terracotta-dark active:scale-95 text-white px-5 py-3 rounded-xl text-sm font-bold transition flex items-center shrink-0 cursor-pointer shadow-md">
+              <i class="fa-solid fa-plus mr-1.5"></i>Add
+            </button>
+          </form>
+
+          <!-- Wishlist Quick Suggestion Chips -->
+          <div id="suggestion-chips-container" class="space-y-2 pt-1">
+            <div class="text-xs font-semibold text-dusty-300 uppercase tracking-wider">Quick Ideas & Suggestions:</div>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" onclick="addSuggestedItem('Popcorn & Cinema Gift Card')" class="text-xs bg-dusty-950 hover:bg-dusty-800 text-dusty-100 border border-dusty-700 px-3 py-1.5 rounded-full transition cursor-pointer">🎬 Cinema Gift Card</button>
+              <button type="button" onclick="addSuggestedItem('Movie Night Snack Basket')" class="text-xs bg-dusty-950 hover:bg-dusty-800 text-dusty-100 border border-dusty-700 px-3 py-1.5 rounded-full transition cursor-pointer">🍿 Snack Basket</button>
+              <button type="button" onclick="addSuggestedItem('Steam / PlayStation / Xbox Gift Card')" class="text-xs bg-dusty-950 hover:bg-dusty-800 text-dusty-100 border border-dusty-700 px-3 py-1.5 rounded-full transition cursor-pointer">🎮 Gaming Gift Card</button>
+              <button type="button" onclick="addSuggestedItem('Retro Video Game Desk Lamp')" class="text-xs bg-dusty-950 hover:bg-dusty-800 text-dusty-100 border border-dusty-700 px-3 py-1.5 rounded-full transition cursor-pointer">🕹️ Retro Gaming Light</button>
+              <button type="button" onclick="addSuggestedItem('Jollibee Treat Card / Voucher')" class="text-xs bg-dusty-950 hover:bg-dusty-800 text-dusty-100 border border-dusty-700 px-3 py-1.5 rounded-full transition cursor-pointer">🐝 Jollibee Gift Card</button>
+              <button type="button" onclick="addSuggestedItem('Filipino Snack & Treat Pack')" class="text-xs bg-dusty-950 hover:bg-dusty-800 text-dusty-100 border border-dusty-700 px-3 py-1.5 rounded-full transition cursor-pointer">🇵🇭 Filipino Snack Pack</button>
+              <button type="button" onclick="addSuggestedItem('Traditional Capiz Shell Ornament')" class="text-xs bg-dusty-950 hover:bg-dusty-800 text-dusty-100 border border-dusty-700 px-3 py-1.5 rounded-full transition cursor-pointer">✨ Capiz Shell Decor</button>
+            </div>
+          </div>
+
+          <!-- Active Wishlist Item List -->
+          <div class="pt-2">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-dusty-300 mb-2.5">My Saved Gift Ideas:</h4>
+            <ul id="my-wishlist-items" class="space-y-2.5 max-h-56 overflow-y-auto pr-1">
+              <!-- Dynamically Populated -->
+            </ul>
+          </div>
+        </div>
+
+        <!-- Secret Santa Reveal & Target Wishlist -->
+        <div class="bg-dusty-900/90 backdrop-blur-xl border border-dusty-700/70 rounded-3xl p-6 shadow-2xl space-y-4 flex flex-col justify-between">
+          
+          <div>
+            <h3 class="text-3xl font-festive font-bold text-roseGold-light flex items-center mb-1 tracking-wide">
+              <i class="fa-solid fa-user-secret mr-2.5 text-terracotta-light text-xl"></i>Your Secret Recipient
+            </h3>
+            <p class="text-sm text-dusty-200">Who will you be playing Santa for this year?</p>
+          </div>
+
+          <!-- Phase 1 Locked State (Before Nov 30) -->
+          <div id="phase1-locked-card" class="bg-dusty-950/80 border border-dusty-800 rounded-2xl p-6 text-center space-y-3 my-auto">
+            <div class="w-16 h-16 mx-auto rounded-full bg-dusty-900 border border-dusty-700 flex items-center justify-center text-roseGold text-3xl animate-float">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <h4 class="text-3xl font-bold text-white font-festive tracking-wide">Draw Unlocks After Nov 30</h4>
+            <p class="text-sm text-dusty-200 leading-relaxed">
+              Everyone is currently logging their wishlists! Your magic scratch card will unlock automatically on <strong>December 1st</strong>.
+            </p>
+          </div>
+
+          <!-- Scratch Card Container (Phase 2 - After Nov 30 or Admin Override) -->
+          <div id="phase2-scratch-card" class="hidden my-auto">
+            <div id="scratch-wrapper" class="scratch-container w-full h-48 bg-dusty-950 rounded-2xl border-2 border-terracotta/50 overflow-hidden shadow-2xl flex flex-col items-center justify-center relative">
+              
+              <!-- Underneath Card Content (Target Name) -->
+              <div id="reveal-card-underneath" class="text-center p-4 space-y-2">
+                <div class="text-xs tracking-widest text-terracotta-light uppercase font-bold">🎁 You are Secret Santa for:</div>
+                <div id="target-person-name" class="text-4xl font-serif font-bold text-white drop-shadow-md">
+                  Participant Name
+                </div>
+                <div class="text-sm text-roseGold font-medium pt-1">
+                  Shhh... Keep it secret! 🤫🎄
+                </div>
+              </div>
+
+              <!-- Canvas Scratch Layer Cover -->
+              <canvas id="scratch-canvas" class="scratch-canvas"></canvas>
+            </div>
+          </div>
+
+          <!-- Target Person's Wishlist Display (Revealed in Phase 2) -->
+          <div id="giftee-wishlist-box" class="hidden border-t border-dusty-800 pt-4 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <h4 id="giftee-wishlist-title" class="text-sm font-bold text-roseGold-light flex items-center">
+                <i class="fa-solid fa-gift mr-2 text-terracotta-light"></i>Recipient's Wishlist
+              </h4>
+              <button type="button" onclick="refreshGifteeWishlist()" class="text-xs text-dusty-300 hover:text-white transition cursor-pointer">
+                <i class="fa-solid fa-arrows-rotate mr-1"></i>Refresh
+              </button>
+            </div>
+            <ul id="giftee-wishlist-items" class="space-y-2 text-sm max-h-44 overflow-y-auto pr-1">
+              <!-- Dynamically Populated -->
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer / Password Protected Organizer Panel Trigger -->
+  <footer class="relative z-10 w-full max-w-4xl mx-auto px-4 py-6 text-center">
+    <button type="button" onclick="openOrganizerPrompt()" class="text-sm text-dusty-200 hover:text-white transition duration-200 inline-flex items-center gap-2 bg-dusty-900/80 px-4 py-2 rounded-full border border-dusty-700/60 cursor-pointer shadow">
+      <i class="fa-solid fa-gear text-terracotta-light"></i>
+      <span>Organizer Settings & Progress</span>
+    </button>
+  </footer>
+
+  <!-- Modal Dialog -->
+  <div id="custom-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-dusty-950 border border-dusty-700 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center space-x-3">
+        <div id="modal-icon" class="w-10 h-10 rounded-xl bg-terracotta/20 text-terracotta-light flex items-center justify-center text-xl shrink-0">
+          <i class="fa-solid fa-info-circle"></i>
+        </div>
+        <h3 id="modal-title" class="text-lg font-bold text-white font-serif">Notice</h3>
+      </div>
+      <p id="modal-body" class="text-xs text-dusty-300 leading-relaxed"></p>
+      <div class="flex justify-end pt-2">
+        <button type="button" onclick="closeModal()" class="bg-dusty-800 hover:bg-dusty-700 text-white text-xs px-4 py-2 rounded-xl transition cursor-pointer">
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Organizer Settings Drawer / Modal -->
+  <div id="organizer-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-dusty-950 border border-dusty-700 rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl my-8">
+      
+      <div class="flex items-center justify-between border-b border-dusty-800 pb-4">
+        <div>
+          <h3 class="text-2xl font-serif font-bold text-white flex items-center">
+            <i class="fa-solid fa-sliders text-terracotta mr-3 text-xl"></i>Organizer Controls
+          </h3>
+          <p class="text-xs text-dusty-300">Manage participants, pairings, and deadline overrides.</p>
+        </div>
+        <button type="button" onclick="closeOrganizerModal()" class="text-dusty-400 hover:text-white p-2 text-xl cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button type="button" id="skip-deadline-btn" onclick="toggleAdminPhaseOverride()" class="bg-terracotta hover:bg-terracotta-dark text-white p-3.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-md cursor-pointer">
+          <i class="fa-solid fa-forward-step"></i>
+          <span id="skip-deadline-btn-text">Skip Deadline & Unlock Reveal</span>
+        </button>
+
+        <button type="button" onclick="changeAdminPassword()" class="bg-dusty-900 hover:bg-dusty-800 border border-dusty-700 text-dusty-200 p-3.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 cursor-pointer">
+          <i class="fa-solid fa-key text-roseGold"></i>
+          <span>Change Admin Password</span>
+        </button>
+      </div>
+
+      <!-- Participant List Config -->
+      <div class="space-y-2">
+        <label class="text-xs font-bold text-roseGold-light flex items-center justify-between">
+          <span>Configure Participants (comma separated)</span>
+          <span class="text-[10px] text-dusty-400 font-normal">Click Save to update list</span>
+        </label>
+        <textarea id="organizer-names-input" rows="3" class="w-full bg-dusty-900 border border-dusty-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-terracotta-light"></textarea>
+        <button type="button" onclick="saveParticipants()" class="bg-dusty-800 hover:bg-dusty-700 text-white text-xs px-4 py-2 rounded-xl transition font-medium cursor-pointer">
+          Save Participants & Re-draw
+        </button>
+      </div>
+
+      <!-- Copy Unique Links for Email Mailing List -->
+      <div class="space-y-2 bg-dusty-900/60 p-4 border border-dusty-800 rounded-2xl">
+        <div class="flex justify-between items-center">
+          <h4 class="text-xs font-bold text-roseGold flex items-center">
+            <i class="fa-solid fa-link mr-2 text-terracotta"></i>Mailing List Unique Links
+          </h4>
+          <button type="button" onclick="copyAllUniqueLinks()" class="text-[11px] bg-terracotta hover:bg-terracotta-dark text-white px-3 py-1 rounded-lg transition font-medium cursor-pointer">
+            <i class="fa-solid fa-copy mr-1"></i>Copy All Links
+          </button>
+        </div>
+        <p class="text-[11px] text-dusty-300">Send these personalized URLs directly to each person:</p>
+        <div id="unique-links-list" class="max-h-36 overflow-y-auto space-y-1.5 pr-1 text-xs">
+          <!-- Dynamically Populated -->
+        </div>
+      </div>
+
+      <!-- Live Participant Status Tracker -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-bold text-roseGold-light">Draw & Reveal Status:</h4>
+        <div class="border border-dusty-800 rounded-2xl overflow-hidden max-h-44 overflow-y-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-dusty-900 text-dusty-300">
+              <tr>
+                <th class="p-2.5">Participant</th>
+                <th class="p-2.5">Target Assigned</th>
+                <th class="p-2.5">Wishlist Items</th>
+                <th class="p-2.5">Scratch Status</th>
+              </tr>
+            </thead>
+            <tbody id="organizer-status-tbody" class="divide-y divide-dusty-800/60">
+              <!-- Dynamically Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="pt-2 border-t border-dusty-800 flex justify-between items-center">
+        <button type="button" onclick="confirmResetAll()" class="text-xs text-red-400 hover:text-red-300 font-medium transition cursor-pointer">
+          <i class="fa-solid fa-trash-can mr-1"></i>Reset All Data & Pairings
+        </button>
+        <button type="button" onclick="closeOrganizerModal()" class="bg-dusty-800 hover:bg-dusty-700 text-white text-xs px-4 py-2 rounded-xl transition cursor-pointer">
+          Done
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    // --- APP GLOBAL STATE ---
+    let defaultParticipants = ["Alice", "Bob", "Charlie", "Diana", "Ethan", "Fiona"];
+    let defaultPasscode = "santa2026";
+    let deadlineDate = new Date("2026-11-30T23:59:59");
+
+    window.participants = [];
+    window.assignments = {};
+    window.wishlists = {};
+    window.currentParticipant = "";
+    let adminPasscode = defaultPasscode;
+    let adminOverridePhase2 = false;
+
+    // Normalize participant name lookup so wishlists never get lost due to case/whitespace
+    function resolveParticipantName(rawName) {
+      if (!rawName) return "";
+      const clean = rawName.trim().toLowerCase();
+      const match = window.participants.find(p => p.trim().toLowerCase() === clean);
+      return match || rawName.trim();
+    }
+
+    // Load Initial Data from Local Storage
+    function loadStoredData() {
+      try {
+        const storedParticipants = localStorage.getItem("ss_participants");
+        window.participants = storedParticipants ? JSON.parse(storedParticipants) : [...defaultParticipants];
+
+        const storedAssignments = localStorage.getItem("ss_assignments");
+        window.assignments = storedAssignments ? JSON.parse(storedAssignments) : {};
+
+        const storedWishlists = localStorage.getItem("ss_wishlists");
+        window.wishlists = storedWishlists ? JSON.parse(storedWishlists) : {};
+
+        const storedPasscode = localStorage.getItem("ss_admin_passcode");
+        adminPasscode = storedPasscode || defaultPasscode;
+
+        const storedOverride = localStorage.getItem("ss_admin_override");
+        adminOverridePhase2 = storedOverride === "true";
+      } catch (e) {
+        console.warn("Storage read error:", e);
+        window.participants = [...defaultParticipants];
+        window.assignments = {};
+        window.wishlists = {};
+      }
+    }
+
+    // Save Data to Storage safely
+    function saveData() {
+      try {
+        localStorage.setItem("ss_participants", JSON.stringify(window.participants || []));
+        localStorage.setItem("ss_assignments", JSON.stringify(window.assignments || {}));
+        localStorage.setItem("ss_wishlists", JSON.stringify(window.wishlists || {}));
+        localStorage.setItem("ss_admin_passcode", adminPasscode);
+        localStorage.setItem("ss_admin_override", adminOverridePhase2 ? "true" : "false");
+      } catch (e) {
+        console.warn("Storage save error:", e);
+      }
+    }
+
+    // Deadline Logic Helper
+    function isDrawPhaseUnlocked() {
+      if (adminOverridePhase2) return true;
+      const now = new Date();
+      return now >= deadlineDate;
+    }
+
+    function isDeadlinePassed() {
+      return isDrawPhaseUnlocked();
+    }
+
+    // Modal Helpers
+    function showModal(title, body, type = 'info') {
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-body').innerText = body;
+      document.getElementById('custom-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('custom-modal').classList.add('hidden');
+    }
+
+    // --- URL LOG-IN IDENTIFIER LOGIC ---
+    function initUserFromURL() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const personParam = urlParams.get('person');
+
+      if (personParam) {
+        const matched = window.participants.find(p => p.toLowerCase() === personParam.trim().toLowerCase());
+        if (matched) {
+          window.currentParticipant = matched;
+          showUserPortal();
+          return;
+        }
+      }
+
+      document.getElementById('logged-out-view').classList.remove('hidden');
+      document.getElementById('user-portal-view').classList.add('hidden');
+      document.getElementById('user-header-badge').classList.add('hidden');
+    }
+
+    function showUserPortal() {
+      document.getElementById('logged-out-view').classList.add('hidden');
+      document.getElementById('user-portal-view').classList.remove('hidden');
+      
+      const badge = document.getElementById('user-header-badge');
+      badge.classList.remove('hidden');
+      badge.classList.add('flex');
+      document.getElementById('logged-in-name').innerText = window.currentParticipant;
+      
+      const welcomeEl = document.getElementById('welcome-person-name');
+      if (welcomeEl) welcomeEl.innerText = window.currentParticipant;
+
+      updateUserDashboard();
+    }
+
+    function updateUserDashboard() {
+      const unlocked = isDrawPhaseUnlocked();
+
+      const badge = document.getElementById('deadline-status-badge');
+      const inputContainer = document.getElementById('wishlist-form');
+      const suggestionChips = document.getElementById('suggestion-chips-container');
+
+      if (unlocked && !adminOverridePhase2) {
+        badge.innerText = "Wishlists Locked";
+        badge.className = "text-[11px] px-2.5 py-0.5 rounded-full border bg-dusty-900 text-red-400 border-red-900 w-fit";
+        if (inputContainer) inputContainer.classList.add('hidden');
+        if (suggestionChips) suggestionChips.classList.add('hidden');
+      } else {
+        badge.innerText = "Open for Edits";
+        badge.className = "text-[11px] px-2.5 py-0.5 rounded-full border bg-dusty-900 text-roseGold border-dusty-700 w-fit";
+        if (inputContainer) inputContainer.classList.remove('hidden');
+        if (suggestionChips) suggestionChips.classList.remove('hidden');
+      }
+
+      renderMyWishlist();
+
+      const phase1Card = document.getElementById('phase1-locked-card');
+      const phase2Card = document.getElementById('phase2-scratch-card');
+
+      if (!unlocked) {
+        phase1Card.classList.remove('hidden');
+        phase2Card.classList.add('hidden');
+        document.getElementById('giftee-wishlist-box').classList.add('hidden');
+      } else {
+        phase1Card.classList.add('hidden');
+        phase2Card.classList.remove('hidden');
+        setupScratchCard();
+      }
+    }
+
+    // --- WISHLIST LOGIC ---
+    function renderMyWishlist() {
+      const ul = document.getElementById('my-wishlist-items');
+      if (!ul) return;
+      ul.innerHTML = '';
+
+      if (!window.wishlists) window.wishlists = {};
+      const key = resolveParticipantName(window.currentParticipant);
+      const list = window.wishlists[key] || [];
+      const unlocked = isDrawPhaseUnlocked();
+
+      if (list.length === 0) {
+        ul.innerHTML = `<li class="text-sm text-dusty-300 italic py-2">No gift ideas added yet. Type an item above or tap a quick suggestion! 🎁</li>`;
+        return;
+      }
+
+      list.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.className = "flex items-center justify-between bg-dusty-950/90 border border-dusty-800 rounded-xl px-4 py-3 text-sm text-white shadow-sm";
+        li.innerHTML = `
+          <span class="flex items-center"><i class="fa-solid fa-gift text-terracotta-light mr-2.5"></i>${escapeHTML(item)}</span>
+          ${(!unlocked || adminOverridePhase2) ? `
+            <button type="button" onclick="removeWishlistItem(${index})" class="text-dusty-400 hover:text-red-400 transition p-1 cursor-pointer" title="Remove item">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          ` : ''}
+        `;
+        ul.appendChild(li);
+      });
+    }
+
+    function addWishlistItem() {
+      if (!window.currentParticipant) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const personParam = urlParams.get('person');
+        if (personParam) {
+          const matched = resolveParticipantName(personParam);
+          if (matched) window.currentParticipant = matched;
+        }
+      }
+
+      if (!window.currentParticipant) {
+        showModal('Access Required', 'Please open your unique participant link (?person=Name) to add items.', 'info');
+        return;
+      }
+
+      if (isDeadlinePassed() && !adminOverridePhase2) {
+        showModal('Deadline Passed', 'Wishlists are locked after November 30th.', 'info');
+        return;
+      }
+
+      const input = document.getElementById('wishlist-input');
+      if (!input) return;
+      const val = input.value.trim();
+
+      if (!val) {
+        input.focus();
+        return;
+      }
+
+      const key = resolveParticipantName(window.currentParticipant);
+      if (!window.wishlists) window.wishlists = {};
+      if (!Array.isArray(window.wishlists[key])) window.wishlists[key] = [];
+
+      window.wishlists[key].push(val);
+
+      input.value = '';
+      input.focus();
+      saveData();
+      renderMyWishlist();
+      if (isDrawPhaseUnlocked()) refreshGifteeWishlist();
+    }
+
+    function addSuggestedItem(itemText) {
+      if (!window.currentParticipant) return;
+
+      if (isDeadlinePassed() && !adminOverridePhase2) {
+        showModal('Deadline Passed', 'Wishlists are locked after November 30th.', 'info');
+        return;
+      }
+
+      const key = resolveParticipantName(window.currentParticipant);
+      if (!window.wishlists) window.wishlists = {};
+      if (!Array.isArray(window.wishlists[key])) window.wishlists[key] = [];
+
+      if (window.wishlists[key].includes(itemText)) {
+        showModal('Item Already Added', 'This suggestion is already in your wishlist!', 'info');
+        return;
+      }
+
+      window.wishlists[key].push(itemText);
+      saveData();
+      renderMyWishlist();
+      if (isDrawPhaseUnlocked()) refreshGifteeWishlist();
+    }
+
+    function removeWishlistItem(index) {
+      const key = resolveParticipantName(window.currentParticipant);
+      if (!window.wishlists || !Array.isArray(window.wishlists[key])) return;
+      window.wishlists[key].splice(index, 1);
+      saveData();
+      renderMyWishlist();
+      if (isDrawPhaseUnlocked()) refreshGifteeWishlist();
+    }
+
+    // Bind event listeners securely on load
+    function initWishlistListeners() {
+      const form = document.getElementById('wishlist-form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          addWishlistItem();
+        });
+      }
+    }
+
+    // --- SCRATCH CARD LOGIC ---
+    function setupScratchCard() {
+      const wrapper = document.getElementById('scratch-wrapper');
+      const canvas = document.getElementById('scratch-canvas');
+      if (!canvas || !wrapper) return;
+
+      const target = window.assignments[window.currentParticipant] || 'Someone Special';
+      document.getElementById('target-person-name').innerText = target;
+
+      const revealedKey = `ss_revealed_${window.currentParticipant}`;
+      const isAlreadyRevealed = localStorage.getItem(revealedKey) === "true";
+
+      const width = wrapper.clientWidth || 320;
+      const height = wrapper.clientHeight || 176;
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+
+      if (isAlreadyRevealed) {
+        canvas.style.display = 'none';
+        renderGifteeWishlist(target);
+        return;
+      }
+
+      // Draw scratch cover styling
+      ctx.fillStyle = '#7E3636';
+      ctx.fillRect(0, 0, width, height);
+
+      // Add festive text pattern on cover
+      ctx.fillStyle = '#F6EAEA';
+      ctx.font = 'bold 14px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('✨ Scratch Here to Reveal! ✨', width / 2, height / 2 - 5);
+      ctx.font = '11px Inter, sans-serif';
+      ctx.fillStyle = '#EBD5D5';
+      ctx.fillText('Drag cursor or finger over card', width / 2, height / 2 + 18);
+
+      let isDrawing = false;
+
+      function getBrushPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: clientX - rect.left,
+          y: clientY - rect.top
+        };
+      }
+
+      function scratch(e) {
+        if (!isDrawing) return;
+        e.preventDefault();
+        const pos = getBrushPos(e);
+
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, 25, 0, Math.PI * 2);
+        ctx.fill();
+
+        checkScratchPercentage();
+      }
+
+      function checkScratchPercentage() {
+        const imageData = ctx.getImageData(0, 0, width, height);
+        const pixels = imageData.data;
+        let clearCount = 0;
+
+        for (let i = 3; i < pixels.length; i += 16) {
+          if (pixels[i] === 0) clearCount++;
+        }
+
+        const percentage = (clearCount / (pixels.length / 16)) * 100;
+        if (percentage > 40) {
+          canvas.style.transition = 'opacity 0.6s ease';
+          canvas.style.opacity = '0';
+          setTimeout(() => {
+            canvas.style.display = 'none';
+            localStorage.setItem(revealedKey, "true");
+            triggerConfetti();
+            renderGifteeWishlist(target);
+          }, 600);
+        }
+      }
+
+      canvas.onmousedown = (e) => { isDrawing = true; scratch(e); };
+      canvas.onmousemove = scratch;
+      canvas.onmouseup = () => { isDrawing = false; };
+
+      canvas.ontouchstart = (e) => { isDrawing = true; scratch(e); };
+      canvas.ontouchmove = scratch;
+      canvas.ontouchend = () => { isDrawing = false; };
+    }
+
+    function renderGifteeWishlist(gifteeName) {
+      const box = document.getElementById('giftee-wishlist-box');
+      const title = document.getElementById('giftee-wishlist-title');
+      const ul = document.getElementById('giftee-wishlist-items');
+
+      if (!box || !ul) return;
+      box.classList.remove('hidden');
+      title.innerHTML = `<i class="fa-solid fa-gift mr-2 text-terracotta-light"></i>${escapeHTML(gifteeName)}'s Wishlist (&lt;$50 USD)`;
+      ul.innerHTML = '';
+
+      const key = resolveParticipantName(gifteeName);
+      const gifteeWishlist = (window.wishlists && Array.isArray(window.wishlists[key])) ? window.wishlists[key] : [];
+
+      if (gifteeWishlist.length === 0) {
+        ul.innerHTML = `<li class="text-dusty-300 italic py-1.5">No wishlist items added by ${escapeHTML(gifteeName)} yet.</li>`;
+        return;
+      }
+
+      gifteeWishlist.forEach(item => {
+        const li = document.createElement('li');
+        li.className = "flex items-center bg-dusty-950/90 border border-dusty-800 rounded-xl px-4 py-2.5 text-white";
+        li.innerHTML = `<i class="fa-solid fa-heart text-terracotta-light mr-2.5 text-xs"></i>${escapeHTML(item)}`;
+        ul.appendChild(li);
+      });
+    }
+
+    function refreshGifteeWishlist() {
+      const target = window.assignments[window.currentParticipant];
+      if (target) renderGifteeWishlist(target);
+    }
+
+    function triggerConfetti() {
+      try {
+        confetti({
+          particleCount: 70,
+          spread: 60,
+          origin: { y: 0.6 },
+          colors: ['#B85B5B', '#C86D51', '#F5E1DA', '#FFFFFF']
+        });
+      } catch (e) {}
+    }
+
+    // --- PAIRING & DRAW ALGORITHM ---
+    function generateAssignments() {
+      if (window.participants.length < 2) return;
+
+      let givers = [...window.participants];
+      let receivers = [...window.participants];
+      let result = {};
+      let valid = false;
+
+      for (let attempts = 0; attempts < 500; attempts++) {
+        receivers = [...window.participants].sort(() => Math.random() - 0.5);
+        valid = true;
+        for (let i = 0; i < givers.length; i++) {
+          if (givers[i] === receivers[i]) {
+            valid = false;
+            break;
+          }
+        }
+        if (valid) break;
+      }
+
+      if (!valid) {
+        for (let i = 0; i < givers.length; i++) {
+          result[givers[i]] = givers[(i + 1) % givers.length];
+        }
+      } else {
+        for (let i = 0; i < givers.length; i++) {
+          result[givers[i]] = receivers[i];
+        }
+      }
+
+      window.assignments = result;
+      saveData();
+    }
+
+    // --- COUNTDOWN TIMER ---
+    function startDeadlineCountdown() {
+      function updateTimer() {
+        const now = new Date();
+        const diff = deadlineDate - now;
+
+        const container = document.getElementById('countdown-text');
+        const fill = document.getElementById('candy-progress-fill');
+
+        if (diff <= 0 || adminOverridePhase2) {
+          if (container) container.innerText = adminOverridePhase2 ? "Phase 2 Unlocked (Admin Override)" : "Draw Phase Active!";
+          if (fill) fill.style.width = '100%';
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / 1000 / 60) % 60);
+
+        if (container) container.innerText = `${days}d ${hours}h ${mins}m remaining`;
+
+        const totalDuration = 30 * 24 * 60 * 60 * 1000;
+        const elapsed = totalDuration - diff;
+        const pct = Math.min(100, Math.max(10, (elapsed / totalDuration) * 100));
+        if (fill) fill.style.width = `${pct}%`;
+      }
+
+      updateTimer();
+      setInterval(updateTimer, 30000);
+    }
+
+    // --- ORGANIZER ADMIN PANEL ---
+    function openOrganizerPrompt() {
+      const inputPass = prompt("Enter Organizer Password:", "");
+      if (inputPass === null) return;
+
+      if (inputPass === adminPasscode) {
+        openOrganizerModal();
+      } else {
+        alert("Incorrect password!");
+      }
+    }
+
+    function openOrganizerModal() {
+      document.getElementById('organizer-names-input').value = window.participants.join(', ');
+      renderOrganizerStatus();
+      updateSkipButtonUI();
+      document.getElementById('organizer-modal').classList.remove('hidden');
+    }
+
+    function closeOrganizerModal() {
+      document.getElementById('organizer-modal').classList.add('hidden');
+    }
+
+    function updateSkipButtonUI() {
+      const text = document.getElementById('skip-deadline-btn-text');
+      const btn = document.getElementById('skip-deadline-btn');
+
+      if (adminOverridePhase2) {
+        text.innerText = "Revert to Nov 30 Deadline";
+        btn.className = "bg-dusty-800 hover:bg-dusty-700 text-white p-3.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-md border border-dusty-700 cursor-pointer";
+      } else {
+        text.innerText = "Skip Deadline & Unlock Reveal";
+        btn.className = "bg-terracotta hover:bg-terracotta-dark text-white p-3.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-md cursor-pointer";
+      }
+    }
+
+    function toggleAdminPhaseOverride() {
+      // Reload latest from localStorage first so no concurrent edits are lost
+      const latestSaved = localStorage.getItem("ss_wishlists");
+      if (latestSaved) {
+        try {
+          window.wishlists = JSON.parse(latestSaved);
+        } catch (e) {}
+      }
+      
+      adminOverridePhase2 = !adminOverridePhase2;
+
+      saveData();
+      updateSkipButtonUI();
+      startDeadlineCountdown();
+      
+      if (window.currentParticipant) {
+        updateUserDashboard();
+      }
+      renderOrganizerStatus();
+    }
+
+    function changeAdminPassword() {
+      const newPass = prompt("Set New Admin Password:", adminPasscode);
+      if (newPass && newPass.trim().length > 0) {
+        adminPasscode = newPass.trim();
+        saveData();
+        showModal('Password Updated', 'Your organizer password has been changed successfully.', 'info');
+      }
+    }
+
+    function saveParticipants() {
+      const val = document.getElementById('organizer-names-input').value;
+      const parsed = val.split(',').map(n => n.trim()).filter(n => n.length > 0);
+
+      if (parsed.length < 2) {
+        showModal('Invalid List', 'Please enter at least 2 participant names.', 'info');
+        return;
+      }
+
+      window.participants = parsed;
+      generateAssignments();
+      saveData();
+      renderOrganizerStatus();
+      showModal('Participants Saved', 'Participant list updated and new draws generated!', 'info');
+    }
+
+    function renderOrganizerStatus() {
+      const tbody = document.getElementById('organizer-status-tbody');
+      const uniqueLinksContainer = document.getElementById('unique-links-list');
+
+      tbody.innerHTML = '';
+      uniqueLinksContainer.innerHTML = '';
+
+      const baseUrl = window.location.origin + window.location.pathname;
+
+      window.participants.forEach(p => {
+        const assigned = window.assignments[p] || 'Unassigned';
+        const wishlistCount = (window.wishlists && window.wishlists[p]) ? window.wishlists[p].length : 0;
+        const scratched = localStorage.getItem(`ss_revealed_${p}`) === "true";
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-dusty-900/50";
+        tr.innerHTML = `
+          <td class="p-2.5 font-bold text-white">${escapeHTML(p)}</td>
+          <td class="p-2.5 text-dusty-300">${escapeHTML(assigned)}</td>
+          <td class="p-2.5 text-dusty-300">${wishlistCount} items</td>
+          <td class="p-2.5">
+            ${scratched 
+              ? `<span class="text-green-400 font-semibold text-[11px]"><i class="fa-solid fa-check mr-1"></i>Revealed</span>` 
+              : `<span class="text-dusty-400 text-[11px]"><i class="fa-solid fa-clock mr-1"></i>Unrevealed</span>`}
+          </td>
+        `;
+        tbody.appendChild(tr);
+
+        const userLink = `${baseUrl}?person=${encodeURIComponent(p)}`;
+        const linkRow = document.createElement('div');
+        linkRow.className = "flex items-center justify-between bg-dusty-950 p-2 rounded-xl border border-dusty-800 text-[11px]";
+        linkRow.innerHTML = `
+          <span class="font-bold text-roseGold-light w-24 shrink-0">${escapeHTML(p)}:</span>
+          <input type="text" readonly value="${userLink}" class="bg-dusty-900 border border-dusty-800 text-dusty-300 px-2 py-1 rounded w-full mx-2 font-mono text-[10px] select-all">
+          <button type="button" onclick="copyText('${userLink}')" class="bg-dusty-800 hover:bg-dusty-700 text-white px-2.5 py-1 rounded text-[10px] shrink-0 cursor-pointer">
+            Copy
+          </button>
+        `;
+        uniqueLinksContainer.appendChild(linkRow);
+      });
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showModal('Link Copied', 'Link copied to clipboard!', 'info');
+      }).catch(() => {
+        const input = document.createElement('input');
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        showModal('Link Copied', 'Link copied to clipboard!', 'info');
+      });
+    }
+
+    function copyAllUniqueLinks() {
+      const baseUrl = window.location.origin + window.location.pathname;
+      const allText = window.participants.map(p => `${p}: ${baseUrl}?person=${encodeURIComponent(p)}`).join('\n');
+      copyText(allText);
+    }
+
+    function confirmResetAll() {
+      if (confirm("Are you sure you want to reset all draw assignments and scratch reveals? Wishlists will be preserved.")) {
+        window.assignments = {};
+        
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('ss_revealed_')) {
+            localStorage.removeItem(key);
+          }
+        });
+
+        generateAssignments();
+        saveData();
+        renderOrganizerStatus();
+        if (window.currentParticipant) updateUserDashboard();
+        showModal('Draw Reset', 'All secret pairings have been re-shuffled!', 'info');
+      }
+    }
+
+    // --- SNOW ANIMATION ---
+    function initSnowAnimation() {
+      const canvas = document.getElementById('snow-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      window.onresize = () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      };
+
+      const flakes = Array.from({ length: 45 }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 2.5 + 1,
+        d: Math.random() + 0.5,
+        opacity: Math.random() * 0.5 + 0.2
+      }));
+
+      function render() {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = 'rgba(246, 234, 234, 0.6)';
+
+        flakes.forEach(f => {
+          ctx.beginPath();
+          ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+          ctx.fill();
+
+          f.y += f.d * 0.6;
+          f.x += Math.sin(f.y / 30) * 0.4;
+
+          if (f.y > height) {
+            f.y = -10;
+            f.x = Math.random() * width;
+          }
+        });
+
+        requestAnimationFrame(render);
+      }
+
+      render();
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
+    }
+
+    // --- INITIALIZATION ---
+    window.onload = function() {
+      loadStoredData();
+      initSnowAnimation();
+      initUserFromURL();
+      startDeadlineCountdown();
+      initWishlistListeners();
+
+      if (Object.keys(window.assignments).length === 0 && window.participants.length > 0) {
+        generateAssignments();
+      }
+    };
+  </script>
+</body>
+</html>
