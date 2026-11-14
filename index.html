@@ -23,8 +23,15 @@
 
     // NOTE FOR GITHUB PAGES HOSTING:
     // Replace null below with your Firebase web app config object: { apiKey: "...", ... }
-    const firebase_config = null;
-
+    const firebase_config = {
+  apiKey: "AIzaSyBOv19biIesZSOMk8X8dReHp426Y7n2SBo",
+  authDomain: "secret-santa-2026-d95ca.firebaseapp.com",
+  projectId: "secret-santa-2026-d95ca",
+  storageBucket: "secret-santa-2026-d95ca.firebasestorage.app",
+  messagingSenderId: "1090442714653",
+  appId: "1:1090442714653:web:85388ae608f76ad09f30f4",
+  measurementId: "G-1G6SGLRZRX"
+};
     function getActiveFirebaseConfig() {
       if (firebase_config && typeof firebase_config === 'object') {
         logCloudDebug('1. Config Source', 'Loaded from hardcoded firebase_config in index.html');
